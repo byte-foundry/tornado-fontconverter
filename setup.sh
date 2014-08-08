@@ -1,4 +1,5 @@
 echo "export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH" >> .bashrc
+apt-get -y update
 apt-get -y install packaging-dev pkg-config python-dev libpango1.0-dev libglib2.0-dev libxml2-dev giflib-dbg libjpeg-dev libtiff-dev uthash-dev
 apt-get -y install git
 git clone https://github.com/fontforge/fontforge.git ff
