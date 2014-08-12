@@ -37,10 +37,11 @@ Plus, if you choose to share folders with your local machine, you can specify it
 	While you don't change your Vagrantfile, you will not need to vagrant reload. For example, if you change your provision script, just type vagrant provision command-line to apply changes.
 	
 - If any of these points fail, the best way to solve the problem is surely to restart on a fresh VM. To do that, keep a copy in your Vagrantfile somewhere (in a Vagrantfile-old for example) and launch the following script:
-	vagrant destroy --force
-	vagrant box remove --force <your box name>
-	rm vagrantfile
-	vagrant init
-	cat Vagrantfile-old > Vagrantfile    #you may apply changes afterwards here if you have some Vagrant configuration issues
-	vagrant box add <your box name> <your box url>
-	vagrant up [--provider=yourprovider if needed, VirtualBox by default]
+	
+- vagrant destroy --force
+- vagrant box remove --force <your box name>
+- rm vagrantfile
+- vagrant init
+- cat Vagrantfile-old > Vagrantfile    #you may apply changes afterwards here if you have some Vagrant configuration issues
+- vagrant box add <your box name> <your box url>
+- vagrant up [--provider=yourprovider if needed, VirtualBox by default]
