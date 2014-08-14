@@ -35,5 +35,8 @@ echo "#####     INSTALLING TORNADO FROM PIP...    #####"
 wget https://bootstrap.pypa.io/get-pip.py
 sudo python get-pip.py
 sudo pip install tornado
+apt-get -y update
+apt-get install ttfautohint
 echo "#####     LAUNCHING PM2 START...    #####"
 pm2 start /home/bill/py-fontconv.py -x --interpreter python
+
