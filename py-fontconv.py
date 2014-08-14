@@ -78,6 +78,9 @@ class Upload(tornado.web.RequestHandler):
 		self.cssGenerator(rname, zname, 'prototypo')
 		self.fontGenerator(rname + '/' + zname + '/'+ fname)
 		os.chdir(rname)
+		os.rename(zname + '/' + zname + '.ttf', zname + '/' + 'tmp.ttf');
+		os.system('ttfautohint ' + zname + '/' + 'tmp.ttf ' + zname + '/' + zname + '.ttf');
+		os.unlink(zname + '/' + 'tmp.ttf')
 		self.zipdir(rname, zname)
 		os.chdir('..')
 		try:
