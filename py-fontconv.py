@@ -36,7 +36,16 @@ class Upload(tornado.web.RequestHandler):
 
 		for ext in EXTS:
 			f = name + ext
-			font.generate(f)
+			if (ext == '.otf'):
+				#font.close()
+				font2 = fontforge.open(filename)
+				font2.selection.all()
+				font2.autoHint()
+				font2.generate(f)
+				#font2.close()
+			else:
+				font.generate(f)
+		font.close()
 
 	@staticmethod
 	def zipdir(root, path):
