@@ -30,42 +30,55 @@ class Upload(tornado.web.RequestHandler):
 
 	@staticmethod
 	def font_converter(filename, format):
-		f = os.path.splitext(filename)[0] + '.' + format
-		font = fontforge.open(filename)
-		font.selection.all()
-		font.autoHint()
-		font.generate(f)
-		font.close()
-
-	@staticmethod
-	def fontpack_generator(filename):
-		#exts = ["woff", "ttf", "otf", "svg", "eot"]
-		name = os.path.splitext(filename)[0]
-		'''if not os.path.exists(name):
-			os.makedirs(name)'''
-
-		font = fontforge.open(filename)
-
-		for ext in EXTS:
-			f = name + ext
+		try:
+			f = os.path.splitext(filename)[0] + '.' + format
 			font = fontforge.open(filename)
 			font.selection.all()
 			font.autoHint()
 			font.generate(f)
-		font.close()
+			font.close()
+			return (True)
+		except:
+			return (False)
+
+	@staticmethod
+	def fontpack_generator(filename):
+		#exts = ["woff", "ttf", "otf", "svg", "eot"]
+		try:
+			name = os.path.splitext(filename)[0]
+			'''if not os.path.exists(name):
+				os.makedirs(name)'''
+
+			font = fontforge.open(filename)
+
+			for ext in EXTS:
+				f = name + ext
+				font = fontforge.open(filename)
+				font.selection.all()
+				font.autoHint()
+				font.generate(f)
+			font.close()
+			return True
+		except:
+			return False
 
 	@staticmethod
 	def zipdir(root, path):
-		zf = zipfile.ZipFile(path + '.zip', mode ='w')
-		for file in glob.glob(path + '/*'):
-			zf.write(file)
-		zf.close()
+		try:
+			zf = zipfile.ZipFile(path + '.zip', mode ='w')
+			for file in glob.glob(path + '/*'):
+				zf.write(file)
+			zf.close()
+			return True
+		except:
+			return False
 
 	@staticmethod
-	def build_files(fileinfo):
+	def build_files(fileinfo, cname):
 		fname = fileinfo['filename']
 		extn = os.path.splitext(fname)[1]
-		cname = str(uuid.uuid4()) + extn
+		if (cname == ""):
+			cname = str(uuid.uuid4()) + extn
 		zname = os.path.splitext(fname)[0]
 		rname = os.path.splitext(cname)[0]
 		file_path = rname + '/' + zname + '/' + fname
@@ -95,9 +108,13 @@ class Upload(tornado.web.RequestHandler):
 		os.system('ttfautohint ' + args[1] + '/' + 'tmp.ttf ' + args[1] + '/' + args[1] + '.ttf');
 		os.unlink(args[1] + '/' + 'tmp.ttf')
 
+	@staticmethod
+	def count_files(foldername):
+		return len([name for name in os.listdir(foldername)])
+
 	def post(self):
 		format = self.get_argument("format")
-		res = self.build_files(self.request.files['file'][0])
+		res = self.build_files(self.request.files['file'][0], "")
 		if (format == 'all'):
 
 			'''
@@ -126,7 +143,6 @@ class Upload(tornado.web.RequestHandler):
 				self.font_converter(res[2], format)
 				try:
 					to_send = res[0] + '/' + res[1] + '/' + res[1] + '.' + format
-					print (to_send)
 					fd = open(to_send, 'r')
 					self.set_header('Content-Type', 'application/x-font-' + format)
 					self.set_header('Content-Disposition', 'attachment; filename=' + res[1] + '.' + format)
@@ -143,7 +159,6 @@ application = tornado.web.Application([
 	], debug=True)
 
 if __name__ == "__main__":
-	#unittest.main()
+	unittest.main()
 	application.listen(8888)
-	#unittest.main()
 	tornado.ioloop.IOLoop.instance().start()
