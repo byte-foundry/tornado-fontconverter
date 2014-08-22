@@ -51,6 +51,10 @@ class TestFontConvFunctions(unittest.TestCase):
 		'''TEST : Checking zip archive'''
 		self.assertTrue(Upload.zipdir('testfont', 'testfont'))
 
+	def test_ziptype(self):
+		'''TEST: Checking zip archive type'''
+		self.assertEqual(mimetypes.guess_type('testfont.zip')[0], 'application/zip')
+
 	def test_count_files(self):
 		'''TEST : Checking zip archive completion'''
 		self.assertEqual(Upload.count_files('testfont'), 7)
