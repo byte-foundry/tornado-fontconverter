@@ -4,7 +4,7 @@
 <title>Upload Form</title>
 </head>
 <body>
-<p><h1>Select & Upload</h1></p>
+<p><h1>Tornado Web Server</h1></p>
 <form enctype="multipart/form-data" action="/upload" method="post">
 File: <input type="file" name="filearg1" />
 <br />
@@ -23,4 +23,12 @@ Path : <input type="text" name="s3path" />
 <br />
 <br />
 <input type="submit" value="Send to S3 Bucket" />
+</form>
+<form enctype="multipart/form-data" action="/delete" method="post">
+<br />
+Path to delete: <input type="text" name="deletedpath" />
+<br />
+<br />
+<br />
+<input type="submit" value="Delete all files" />
 </form>
