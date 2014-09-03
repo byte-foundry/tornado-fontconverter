@@ -5,8 +5,6 @@ import boto, boto.s3
 from boto.s3.connection import S3Connection
 from upload import Upload
 
-access_key = 'AKIAIVWH4LVRLLILLKUA'
-secret_key = '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'
 exts = '.woff', '.ttf', '.otf', '.svg', '.eot'
 
 class Bucket(tornado.web.RequestHandler):
@@ -28,7 +26,7 @@ class Bucket(tornado.web.RequestHandler):
 		format = self.get_argument("format")
 		path = self.get_argument("s3path")
 		res = Upload.build_files(self.request.files['filearg2'][0])
-		conn = S3Connection(access_key, secret_key)
+		conn = S3Connection(ACCESS_KEY,SECRET_KEY)
 		bucket = conn.get_bucket('allfonts')
 		bucket.set_acl('private')
 		if (format == 'all'):
