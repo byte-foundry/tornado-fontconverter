@@ -26,7 +26,7 @@ class Bucket(tornado.web.RequestHandler):
 		format = self.get_argument("format")
 		path = self.get_argument("s3path")
 		res = Upload.build_files(self.request.files['filearg2'][0])
-		conn = S3Connection(ACCESS_KEY,SECRET_KEY)
+		conn = S3Connection(os.environ['ACCESS_KEY'], os.environ['SECRET_KEY'])
 		bucket = conn.get_bucket('allfonts')
 		bucket.set_acl('private')
 		if (format == 'all'):

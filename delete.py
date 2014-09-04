@@ -9,6 +9,8 @@ class Delete(tornado.web.RequestHandler):
 		deletedpath = self.get_argument("deletedpath")
 		conn = S3Connection(os.environ['ACCESS_KEY'], os.environ['SECRET_KEY'])
 		bucket = conn.get_bucket('allfonts')
-		#try:
-		bucketListResultSet = bucket.list(prefix=deletedpath)
-		result = bucket.delete_keys([key.name for key in bucketListResultSet])
+		try:
+			bucketListResultSet = bucket.list(prefix=deletedpath)
+			result = bucket.delete_keys([key.name for key in bucketListResultSet])
+		except:
+			raise tornado.web.HTTPError(404, 'Not Found')
