@@ -1,0 +1,15 @@
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+	config.vm.box = "<Your box name>"
+	config.vm.network "forwarded_port", guest:8888, host:8888 #if you need port-forwarding
+	config.vm.synced_folder "<local folder to share on the VM>", "<path this folder will be copied to on the VM>", create: true, type: "rsync"
+	$before_script = <<-SH
+		touch /etc/profile.d/vagrant.sh
+		chmod 777 /etc/profile.d/vagrant.sh
+		echo "#vagrant profile script" > /etc/profile.d/vagrant.sh
+		echo export ACCESS_KEY='<Your S3 Access Key>' >> /etc/profile.d/vagrant.sh
+		echo export SECRET_KEY='<Your S3 Secret Key>' >> /etc/profile.d/vagrant.sh
+		echo export BUCKET='<Your Bucket Name, previously created on S3' >> /etc/profile.d/vagrant.sh
+		sh /etc/profile.d/vagrant.sh
+	SH
