@@ -59,3 +59,6 @@ If you need to set some environment variables in your Ubuntu VM mounted with Vag
 	config.vm.provision "shell", inline: $before_script
 	...
 
+- S3
+
+To use correctly our Tornado Web Server, you must create your bucket directly in S3 and set an environment variable called "BUCKET" which will contain your bucket's name : export BUCKET=<your bucket name>. You can choose either to set it while you're connected in your VM or by using the before script tasks above (preferred).
