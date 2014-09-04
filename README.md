@@ -45,3 +45,17 @@ Plus, if you choose to share folders with your local machine, you can specify it
 - cat Vagrantfile-old > Vagrantfile    #you may apply changes afterwards here if you have some Vagrant configuration issues
 - vagrant box add <your box name> <your box url>
 - vagrant up [--provider=yourprovider if needed, VirtualBox by default]
+
+If you need to set some environment variables in your Ubuntu VM mounted with Vagrant, the best way seems to be typing a 'before script' list of shell commands, which your Vagrantfile will be told to execute, with the following syntax :
+
+	$before_script = <<-SH
+		echo "#vagrant profile script" > /etc/profile.d/vagrant.sh
+		echo export FOO="bar" >> /etc/profile.d/vagrant.sh
+		echo export BAZ="qux">> /etc/profile.d/vagrant.sh
+		chmod +x /etc/profile.d/vagrant.sh
+		# other instructions here if needed
+	SH
+
+	config.vm.provision "shell", inline: $before_script
+	...
+
