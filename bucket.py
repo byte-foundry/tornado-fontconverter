@@ -10,6 +10,8 @@ exts = '.woff', '.ttf', '.otf', '.svg', '.eot'
 class Bucket(tornado.web.RequestHandler):
 	@staticmethod
 	def send_to_bucket(bucket, path, localpath, match, filename):
+		if ((not os.path.exists(localpath)) or (not os.path.exists(filename))):
+			return False
 		try:
 			for root, dirs, files in os.walk(localpath):
 				for name in files:
@@ -19,15 +21,15 @@ class Bucket(tornado.web.RequestHandler):
 						k.key = full_key_name
 						k.set_contents_from_filename(filename + name)
 		except:
-			raise tornado.web.HTTPError(404, 'Not Found')
-		shutil.rmtree(localpath)
+			raise tornado.web.HTTPError(404, 'Not Found - send_to_bucket failed')
+		return True
 
 	def post(self):
 		format = self.get_argument("format")
 		path = self.get_argument("s3path")
 		res = Upload.build_files(self.request.files['filearg2'][0])
 		conn = S3Connection(os.environ['ACCESS_KEY'], os.environ['SECRET_KEY'])
-		bucket = conn.get_bucket('allfonts')
+		bucket = conn.get_bucket(os.environ['BUCKET'])
 		bucket.set_acl('private')
 		if (format == 'all'):
 			Upload.css_generator(res[0], res[1], 'prototypo')
@@ -39,3 +41,4 @@ class Bucket(tornado.web.RequestHandler):
 			if ('.' + format) in exts:
 				Upload.font_converter(res[2], format)
 				self.send_to_bucket(bucket, path, res[0], format, res[0] + '/' + res[1] + '/')
+		shutil.rmtree(res[0])
