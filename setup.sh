@@ -1,24 +1,21 @@
 echo "#####     CREATING .BASHRC FILE AND EDITING IT WITH LIBRAIRIES     #####"
-touch .bashrc && chmod 777 .bashrc
+touch ~/.bashrc && chmod 777 ~/.bashrc
 echo "export LD_LIBRARY_PATH=/usr/local/lib:$LD_LIBRARY_PATH" >> .bashrc
-source .bashrc && echo "source bashrc complete"
+source ~/.bashrc && echo "source bashrc complete"
 echo "#####     UPDATING APT-GET     #####"
 apt-get -y update
 echo "#####     INSTALLING GIT...    #####"
 apt-get -y install git
-echo "#####     INSTALLING NODEJS...     #####"
+echo "#####     INSTALLING NODEJS & NPM...     #####"
+apt-get -y update
+apt-get install -y python-software-properties
+add-apt-repository ppa:chris-lea/node.js
+apt-get -y update
 apt-get -y install nodejs
-ln -s /usr/bin/nodejs /usr/bin/node
+echo "#####     INSTALLING PM2...     #####"
+sudo npm install pm2 -g --unsafe-perm
 echo "#####     INSTALLING MAKE...     #####"
 apt-get -y install make
-echo "#####     INSTALLING NPM FROM GITHUB...     #####"
-git clone https://github.com/npm/npm.git
-cd npm
-sudo make
-sudo make install
-cd ..
-echo "#####     INSTALLING PM2...    #####"
-sudo npm install pm2@latest -g
 echo "#####     UPDATING APT-GET     #####"
 apt-get -y update
 echo "#####     INSTALLING DEPENDENCIES FOR FONTFORGE...    #####"
@@ -28,15 +25,13 @@ git clone https://github.com/fontforge/fontforge.git ff
 cd ff
 ./bootstrap
 ./configure
-sudo make
-sudo make install
+make
+make install
 cd ..
-echo "#####     INSTALLING TORNADO FROM PIP...    #####"
+echo "#####     DOWNLOADING PIP...    #####"
 wget https://bootstrap.pypa.io/get-pip.py
-sudo python get-pip.py
-sudo pip install tornado
-apt-get -y update
-apt-get install ttfautohint
-echo "#####     LAUNCHING PM2 START...    #####"
-pm2 start /home/bill/py-fontconv.py -x --interpreter python
-
+python get-pip.py
+echo "#####     INSTALLING TORNADO & BOTO FROM PIP...     #####"
+pip install tornado
+pip install boto
+pm2 start /home/vagrant/main.py -x --interpreter python
