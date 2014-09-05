@@ -34,4 +34,5 @@ python get-pip.py
 echo "#####     INSTALLING TORNADO & BOTO FROM PIP...     #####"
 pip install tornado
 pip install boto
-pm2 start /home/vagrant/main.py -x --interpreter python
+#echo "#####    LAUNCHING SERVER WITH PM2...     #####"
+#pm2 start /home/vagrant/main.py -x --interpreter python
